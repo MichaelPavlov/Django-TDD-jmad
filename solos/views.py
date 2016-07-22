@@ -1,6 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
+
+from solos.models import Solo
 
 
 def index(request):
-    return render_to_response('solos/index.html')
+    qs = Solo.objects.filter(instrument=request.GET.get('instrument', None))
+
+    context = {
+        'solos': qs
+    }
+    return render(request, 'solos/index.html', context)
