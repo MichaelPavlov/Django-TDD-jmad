@@ -16,10 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-import solos
+from solos.views import index
 
 urlpatterns = [
-    url(r'^$', solos.views.index),
+    url(r'^$', index),
     url(r'^admin/', admin.site.urls),
 
 ]
