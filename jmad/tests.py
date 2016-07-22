@@ -11,7 +11,7 @@ class StudentTestCase(LiveServerTestCase):
         self.browser.implicitly_wait(2)
 
     def tearDown(self):
-        # self.browser.quit()
+        self.browser.quit()
         # self.display.stop()
         pass
 
