@@ -6,22 +6,28 @@ from solos.models import Solo
 from solos.views import index, SoloDetailView
 
 
-class IndexViewTestCase(TestCase):
+class SolosBaseTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-        self.drum_solo = Solo.objects.create(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.drum_solo = Solo.objects.create(
             track='Bugle Call Rag',
             artist='Rich',
             instrument='drums'
         )
 
-        self.bass_solo = Solo.objects.create(
+        cls.bass_solo = Solo.objects.create(
             track='Mr. PC',
             artist='Coltrane',
             instrument='saxophone'
         )
 
+
+class IndexViewTestCase(SolosBaseTestCase):
     def test_index_view_basic(self):
         """
         Test that index view returns a 200 response and uses the correct template
