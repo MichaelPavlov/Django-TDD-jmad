@@ -11,18 +11,10 @@ def index(request):
         qs = Solo.objects.all()
 
         if request.GET.get('instrument', None):
-            qs = qs.filter(
-                instrument=request.GET.get(
-                    'instrument', None
-                )
-            )
+            qs = qs.filter(instrument=request.GET.get('instrument', None))
 
         if request.GET.get('artist', None):
-            qs = qs.filter(
-                instrument=request.GET.get(
-                    'artist', None
-                )
-            )
+            qs = qs.filter(artist=request.GET.get('artist', None))
 
     context = {
         'solos': qs
