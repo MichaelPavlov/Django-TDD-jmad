@@ -1,8 +1,8 @@
-from django.core.urlresolvers import resolve
 from django.db.models import QuerySet
 from django.test import RequestFactory
 from django.test import TestCase
 
+from albums.models import Album, Track
 from solos.models import Solo
 from solos.views import index, SoloDetailView
 
@@ -15,16 +15,40 @@ class SolosBaseTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.no_funny_hats = Album.objects.create(
+            name='No Funny Hats',
+            slug='no-funny-hats',
+        )
+
+        cls.bugle_call_rag = Track.objects.create(
+            name='Bugle Call Rag',
+            album=cls.no_funny_hats,
+            slug='bugle-call-rag',
+        )
+
         cls.drum_solo = Solo.objects.create(
-            track='Bugle Call Rag',
             artist='Rich',
-            instrument='drums'
+            instrument='drums',
+            track=cls.bugle_call_rag,
+            slug='rich',
+        )
+
+        cls.giant_steps = Album.objects.create(
+            name='Giant Steps',
+            slug='giant-steps',
+        )
+
+        cls.mr_pc = Track.objects.create(
+            name='Mr. PC',
+            slug='mr-pc',
+            album=cls.giant_steps,
         )
 
         cls.bass_solo = Solo.objects.create(
-            track='Mr. PC',
+            track=cls.mr_pc,
             artist='Coltrane',
-            instrument='saxophone'
+            instrument='saxophone',
+            slug='coltrane',
         )
 
 
@@ -72,5 +96,3 @@ class SoloViewTestCase(SolosBaseTestCase):
 
         with self.assertTemplateUsed('solos/solo_detail.html'):
             response.render()
-
-
