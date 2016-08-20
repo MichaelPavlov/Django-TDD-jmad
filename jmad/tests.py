@@ -50,10 +50,10 @@ class StudentTestCase(LiveServerTestCase):
         self.admin_user = User.objects.create_superuser(username='bill', email='bill@example.com', password='password')
 
     def tearDown(self):
-        self.browser.quit()
+        # self.browser.quit()
         pass
 
-    def q_test_student_find_solos(self):
+    def test_student_find_solos(self):
         """
         Test that a user can search for solos
         """
@@ -134,6 +134,13 @@ class StudentTestCase(LiveServerTestCase):
         self.assertEqual(solos_links[0].get_attribute('href'), self.live_server_url + '/admin/solos/solo/')
 
         # He clicks on ALbums and sees all of the Albums that have been added so far
+        albums_links[0].click()
+        self.assertEqual(self.browser.find_element_by_link_text('Know What I Mean?').get_attribute('href'),
+                         self.live_server_url + '/admin/albums/album/3/change/')
+        self.assertEqual(self.browser.find_element_by_link_text('Kind of Blue').get_attribute('href'),
+                         self.live_server_url + '/admin/albums/album/2/change/')
+        self.assertEqual(self.browser.find_element_by_link_text('My Favorite Things').get_attribute('href'),
+                         self.live_server_url + '/admin/albums/album/1/change/')
 
         # Going back to the home page, he clicks the Tracks link and sees the Tracks that have been added. They're orderes first by Album, then by track number.
 
