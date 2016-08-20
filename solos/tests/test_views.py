@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from albums.models import Album, Track
 from solos.models import Solo
-from solos.views import index, SoloDetailView
+from solos.views import index, solo_detail
 
 
 class SolosBaseTestCase(TestCase):
@@ -27,10 +27,10 @@ class SolosBaseTestCase(TestCase):
         )
 
         cls.drum_solo = Solo.objects.create(
-            artist='Rich',
+            artist='Buddy Rich',
             instrument='drums',
             track=cls.bugle_call_rag,
-            slug='rich',
+            slug='buddy-rich',
         )
 
         cls.giant_steps = Album.objects.create(
@@ -74,7 +74,7 @@ class IndexViewTestCase(SolosBaseTestCase):
 
         self.assertIs(type(solos), QuerySet)
         self.assertEqual(len(solos), 1)
-        self.assertEqual(solos[0].artist, 'Rich')
+        self.assertEqual(solos[0].artist, 'Buddy Rich')
 
 
 class SoloViewTestCase(SolosBaseTestCase):
@@ -83,16 +83,18 @@ class SoloViewTestCase(SolosBaseTestCase):
         Test that the solo view returns 200 response, uses the correct template and has the correct context
         """
 
-        request = self.factory.get('/solos/1/')
-
-        # print()
-        response = SoloDetailView.as_view()(
-            request,
-            pk=self.drum_solo.pk
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context_data['solo'].artist, 'Rich')
+        request = self.factory.get('/solos/no-funny-hats/bugle-call-rag/buddy-rich/')
 
         with self.assertTemplateUsed('solos/solo_detail.html'):
-            response.render()
+            response = solo_detail(
+                request,
+                album=self.no_funny_hats.slug,
+                track=self.bugle_call_rag.slug,
+                artist=self.drum_solo.slug
+            )
+
+        self.assertEqual(response.status_code, 200)
+        page = response.content.decode()
+        self.assertInHTML('<p id="jmad-artist">Buddy Rich</p>', page)
+        self.assertInHTML('<p id="jmad-track">Bugle Call Rag [1 solo]</p>', page)
+
