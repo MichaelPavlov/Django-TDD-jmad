@@ -44,8 +44,8 @@ class StudentTestCase(LiveServerTestCase):
             slug='miles-davis'
         )
 
-        self.track4 = Track.objects.create(name='Freddie Freeloader', album=self.album2)
-        self.track5 = Track.objects.create(name='Blue in Green', album=self.album2)
+        self.track4 = Track.objects.create(name='Freddie Freeloader', album=self.album2, track_number=2)
+        self.track5 = Track.objects.create(name='Blue in Green', album=self.album2, track_number=3)
 
         self.admin_user = User.objects.create_superuser(username='bill', email='bill@example.com', password='password')
 
@@ -143,6 +143,15 @@ class StudentTestCase(LiveServerTestCase):
                          self.live_server_url + '/admin/albums/album/1/change/')
 
         # Going back to the home page, he clicks the Tracks link and sees the Tracks that have been added. They're orderes first by Album, then by track number.
+        self.browser.find_element_by_css_selector('#site-name a').click()
+        self.browser.find_element_by_link_text('Tracks').click()
+        track_rows = self.browser.find_elements_by_css_selector('#result_list tr')
+
+        self.assertEqual(track_rows[1].text, 'Kind of Blue All Blues -')
+        self.assertEqual(track_rows[2].text, 'Kind of Blue Freddie Freeloader 2')
+        self.assertEqual(track_rows[3].text, 'Kind of Blue Blue in Green 3')
+        self.assertEqual(track_rows[4].text, 'Know What I Mean? Waltz for Debby -')
+        self.assertEqual(track_rows[5].text, 'My Favorite Things My Favorite Things -')
 
         # He adds the track to an album that already exists
 
