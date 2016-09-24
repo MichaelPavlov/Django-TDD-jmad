@@ -1,24 +1,31 @@
+import musicbrainzngs as mb
 from django.shortcuts import render
-from django.views.generic import DetailView
 
 from solos.models import Solo
 
+mb.set_useragent('JMAD - TDD tutorial', version='0.0.1')
+
 
 def index(request):
-    qs = []
+    solos_queryset = []
 
     if request.GET.keys():
-        qs = Solo.objects.all()
+        solos_queryset = Solo.objects.all()
 
         if request.GET.get('instrument', None):
-            qs = qs.filter(instrument=request.GET.get('instrument', None))
+            solos_queryset = solos_queryset.filter(instrument=request.GET.get('instrument', None))
 
-        if request.GET.get('artist', None):
-            qs = qs.filter(artist=request.GET.get('artist', None))
+        artist_kwarg = request.GET.get('artist', None)
+        if artist_kwarg:
+            solos_queryset = solos_queryset.filter(artist=artist_kwarg)
 
     context = {
-        'solos': qs
+        'solos': solos_queryset
     }
+
+    if context['solos'].count() == 0 and artist_kwarg:
+        context['solos'] = Solo.get_artist_tracks_from_musicbrainz(artist_kwarg)
+
     return render(request, 'solos/index.html', context)
 
 

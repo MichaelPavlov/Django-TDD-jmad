@@ -1,3 +1,5 @@
+from unittest.mock import patch, Mock
+
 from django.db.models import QuerySet
 from django.test import RequestFactory
 from django.test import TestCase
@@ -53,6 +55,22 @@ class SolosBaseTestCase(TestCase):
 
 
 class IndexViewTestCase(SolosBaseTestCase):
+    @patch('solos.models.Solo.get_artist_tracks_from_musicbrainz')
+    def test_index_view_returns_external_tracks(self, mock_solos_get_from_mb):
+        """
+        Test that the index view will return artists from the MusicBrainz API if none are returned from our database
+        """
+        mock_solo = Mock()
+        mock_solo.artist = 'Jaco Pastorius'
+        mock_solos_get_from_mb.return_value = [mock_solo]
+        response = self.client.get('/', {
+            'instrument': 'Bass',
+            'artist': 'Jaco Pastorius'  # not currently in DB
+        })
+        solos = response.context['solos']
+        self.assertEqual(len(solos), 1)
+        self.assertEqual(solos[0].artist, 'Jaco Pastorius')
+
     def test_index_view_basic(self):
         """
         Test that index view returns a 200 response and uses the correct template
@@ -97,4 +115,3 @@ class SoloViewTestCase(SolosBaseTestCase):
         page = response.content.decode()
         self.assertInHTML('<p id="jmad-artist">Buddy Rich</p>', page)
         self.assertInHTML('<p id="jmad-track">Bugle Call Rag [1 solo]</p>', page)
-
