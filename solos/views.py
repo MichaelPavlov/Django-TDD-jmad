@@ -9,13 +9,14 @@ mb.set_useragent('JMAD - TDD tutorial', version='0.0.1')
 def index(request):
     solos_queryset = []
 
+    artist_kwarg = request.GET.get('artist', None)
+
     if request.GET.keys():
         solos_queryset = Solo.objects.all()
 
         if request.GET.get('instrument', None):
             solos_queryset = solos_queryset.filter(instrument=request.GET.get('instrument', None))
 
-        artist_kwarg = request.GET.get('artist', None)
         if artist_kwarg:
             solos_queryset = solos_queryset.filter(artist=artist_kwarg)
 
@@ -23,7 +24,7 @@ def index(request):
         'solos': solos_queryset
     }
 
-    if context['solos'].count() == 0 and artist_kwarg:
+    if len(context['solos']) == 0 and artist_kwarg:
         context['solos'] = Solo.get_artist_tracks_from_musicbrainz(artist_kwarg)
 
     return render(request, 'solos/index.html', context)

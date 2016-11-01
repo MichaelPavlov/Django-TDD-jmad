@@ -1,0 +1,6 @@
+Django==1.9.8
+djangorestframework==3.5.1
+EasyProcess==0.2.2
+musicbrainzngs==0.6
+PyVirtualDisplay==0.2
+selenium==2.53.6

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # local apps
     'solos',
     'albums',
+    'rest_framework',
 ]
 
 MIDDLEWARE_CLASSES = [

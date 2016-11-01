@@ -13,15 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 
 from solos.views import index, solo_detail
 
-urlpatterns = [
-    url(r'^$', index),
-    url(r'^admin/', admin.site.urls),
-    url(r'^recordings/(?P<album>[\w-]+)/(?P<track>[\w-]+)/(?P<artist>[\w-]+)/$', solo_detail,
-        name='solo_detail_view'),
+api_patterns = [
+    url(r'^', include('albums.api.urls')),
+    # url(r'^', include('solos.api.urls')),
+]
 
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^recordings/(?P<album>[\w-]+)/(?P<track>[\w-]+)/(?P<artist>[\w-]+)/$', solo_detail, name='solo_detail_view'),
+    url(r'^api/', include(api_patterns, namespace='api')),
+    url(r'^$', index),
 ]
