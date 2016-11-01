@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
+from albums.api.serializers import AlbumSerializer, TrackSerializer
 from albums.models import Album, Track
-from solos.api.serializers import AlbumSerializer, TrackSerializer
 
 
 class AlbumViewSet(ModelViewSet):

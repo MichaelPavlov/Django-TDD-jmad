@@ -20,7 +20,7 @@ from solos.views import index, solo_detail
 
 api_patterns = [
     url(r'^', include('albums.api.urls')),
-    # url(r'^', include('solos.api.urls')),
+    url(r'^', include('solos.api.urls')),
 ]
 
 urlpatterns = [

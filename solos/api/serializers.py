@@ -1,22 +1,12 @@
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from albums.models import Album, Track
+from solos.models import Solo
 
 
-class AlbumSerializer(HyperlinkedModelSerializer):
+class SoloSerializer(HyperlinkedModelSerializer):
     class Meta:
-        model = Album
+        model = Solo
         fields = '__all__'
         extra_kwargs = {
-            'url': {'view_name': 'api:album-detail'}
-        }
-
-
-class TrackSerializer(HyperlinkedModelSerializer):
-    class Meta:
-        model = Track
-        fields = '__all__'
-        extra_kwargs = {
-            'url': {'view_name': 'api:track-detail'},
-            'album': {'view_name': 'api:album-detail'},
+            'url': {'view_name': 'api:solo-detail'}
         }
