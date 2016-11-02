@@ -52,8 +52,7 @@ class StudentTestCase(LiveServerTestCase):
         self.admin_user = User.objects.create_superuser(username='bill', email='bill@example.com', password='password')
 
     def tearDown(self):
-        # self.browser.quit()
-        pass
+        self.browser.quit()
 
     def test_student_find_solos(self):
         """
