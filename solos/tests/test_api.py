@@ -17,7 +17,7 @@ class SoloAPITestCase(APITestCase):
         Test that we can create solo
         """
         post_data = {
-            'track': '/api/tracks/2/',
+            'track': '/api/tracks/1/',
             'artist': 'Jhon Coltrane',
             'instrument': 'saxophone',
             'start_time': '0:24',
@@ -25,11 +25,11 @@ class SoloAPITestCase(APITestCase):
         }
         solos_url = reverse('api:solo-list')
         response = self.client.post(solos_url, data=post_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         self.assertEqual(response.data, {
             'url': 'http://testserver/api/solos/1/',
             'artist': 'Jhon Coltrane',
-            'slug': 'jhon-coltraine',
+            'slug': 'jhon-coltrane',
             'instrument': 'saxophone',
             'start_time': '0:24',
             'end_time': '3:21',
